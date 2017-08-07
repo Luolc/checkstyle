@@ -412,21 +412,38 @@ public final class LocalizedMessage
 
     @Override
     public int compareTo(LocalizedMessage other) {
-        int result = Integer.compare(lineNo, other.lineNo);
+//        final int result;
+        return Comparator.comparingInt(LocalizedMessage::getLineNo)
+                .thenComparing(Comparator.comparingInt(LocalizedMessage::getColumnNo))
+                .thenComparing(Comparator.comparing(LocalizedMessage::getModuleId, Comparator.nullsFirst(String::compareTo)))
+                .thenComparing(LocalizedMessage::getMessage)
+                .compare(this, other);
 
-        if (lineNo == other.lineNo) {
-            if (columnNo == other.columnNo) {
-                result = Comparator.nullsFirst(Comparator.<String>naturalOrder())
-                        .compare(moduleId, other.getModuleId());
-                if (result == 0) {
-                    result = getMessage().compareTo(other.getMessage());
-                }
-            }
-            else {
-                result = Integer.compare(columnNo, other.columnNo);
-            }
-        }
-        return result;
+//
+//        if (lineNo == other.lineNo) {
+//            if (columnNo == other.columnNo) {
+//                if (Objects.equals(moduleId, other.moduleId)) {
+//                    result = getMessage().compareTo(other.getMessage());
+//                }
+//                else if (moduleId == null) {
+//                    result = -1;
+//                }
+//                else if (other.moduleId == null) {
+//                    result = 1;
+//                }
+//                else {
+//                    result = moduleId.compareTo(other.moduleId);
+//                }
+//            }
+//            else {
+//                result = Integer.compare(columnNo, other.columnNo);
+//            }
+//        }
+//        else {
+//            result = Integer.compare(lineNo, other.lineNo);
+//        }
+//
+//        return result;
     }
 
     /**
